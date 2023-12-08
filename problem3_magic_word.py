@@ -1,52 +1,39 @@
-import random
+# Create the word to display to the user.
+# If the guessed letter is in the word, display the letter. Otherwise, display an underscore
+word_to_guess = "APPLE"
+max_chances = 10
+guessed_letters = []
 
-# here we create the word to display to the user. 
-# If the guessed letter is in the word, we display the letter. Otherwise we display an underscore
-def display_word(word, guessed_letters):
-    display = ''
-    for letter in word:
-        if letter in guessed_letters:
-            display += letter
+print("Try to guess the word. It has {} letters.".format(len(word_to_guess)))
+
+chances = 0
+while chances < max_chances:
+    # Display the word after checking if each letter in the word is in the guessed_letters array. Otherwise _
+    # Display the guessed letters after joining them
+    guess = input("\nGuess the word: {}\nSo far used letters: {}\nYour guess: "
+                  .format(
+                      ''.join([letter if letter in guessed_letters else '_' for letter in word_to_guess]),
+                      ', '.join(guessed_letters)))
+
+    # Check if the guess is a single character and a letter
+    if len(guess) == 1 and guess.isalpha():
+        # Check if the guessed letter has been previously guessed
+        # If not, add the guess to the guessed_letters array
+        if guess.upper() in guessed_letters:
+            print("Letter already guessed. Please choose another")
         else:
-            display += '_'
-    return display
+            guessed_letters.append(guess.upper())
 
-def main():
-    word_to_guess = "APPLE"
-    max_chances = 10
-    guessed_letters = []
+        # Check if all the letters have been guessed by matching all unique characters in guessed_letters with word_to_guess
+        if set(guessed_letters) == set(word_to_guess):
+            print("Congratulations! You guessed the word '{}' correctly in {} tries."
+                  .format(word_to_guess, chances + 1))
+            break
 
-    print("Try to guess the word. It has {} letters.".format(len(word_to_guess)))
-    
-    chances = 0
-    while chances < max_chances:
-        # here we display the word after passing the word and guessed letters to display_word defined above
-        # we also display the guessed letters after joining them
-        guess = input("\nGuess the word: {}\nSo far used letters: {}\nYour guess: "
-                      .format(display_word(word_to_guess, guessed_letters), ', '.join(guessed_letters)))
-
-        # here we check if the guess is a single character and a letter
-        if len(guess) == 1 and guess.isalpha():
-            # we first check if the guessed letter has been previously guessed
-            # If not, we add the guess to the guessed_letters array
-            if(guess.upper() in guessed_letters):
-                print("Letter already guessed. Please choose another")
-            else:
-                guessed_letters.append(guess.upper())
-
-            # here we check if all the letters have been guessed by matching all unique characters in guessed_letters with word_to_guess
-            if set(guessed_letters) == set(word_to_guess):
-                print("Congratulations! You guessed the word '{}' correctly in {} tries."
-                      .format(word_to_guess, chances + 1))
-                break
-
-            chances += 1
-        else:
-            print("Invalid input. Please enter a single letter.")
-
+        chances += 1
     else:
-        # when user runs out of guesses
-        print("Sorry, you have lost. The correct word was '{}'.".format(word_to_guess))
+        print("Invalid input. Please enter a single letter.")
 
-if __name__ == "__main__":
-    main()
+else:
+    # When the user runs out of guesses
+    print("Sorry, you have lost. The correct word was '{}'.".format(word_to_guess))
