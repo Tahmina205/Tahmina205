@@ -1,0 +1,37 @@
+word = "LITTLE"
+guessed = ""
+allguesses = []
+line = "______"
+number_of_guesses = ""
+print(line)
+
+
+attempts = 10
+
+while attempts > 0:
+    letter = input("Guess a letter:\n").title() 
+    allguesses.append(letter)
+   
+    if letter in word:
+        print("Well done!")
+    else:
+        attempts -= 1
+        print(f"Wrong. You have {attempts} number of attempts left.")
+        
+    print(f"\nletters used so far: {allguesses}")
+    
+    wrongletters = 0
+    for guess in word:
+        if guess in allguesses:
+            print(f"{guess}", end="")
+        else:
+            print("line", end="")
+            wrongletters += 1
+       
+            if wrongletters==0:
+                print(f"Congratulations! You've guessed the word. You took {number_of_guesses.count(allguesses)} number of guesses.")
+            break  
+ 
+          
+if attempts==0:
+    print("You have lost.")
