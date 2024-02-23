@@ -1,37 +1,70 @@
-word = "LITTLE"
-guessed = ""
-allguesses = []
-line = "______"
-number_of_guesses = ""
-print(line)
+import random
+
+def roll_die():
+    return random.randint(1, 6)
 
 
-attempts = 10
+def roll_three_dice():
+    return roll_die(), roll_die(), roll_die()
 
-while attempts > 0:
-    letter = input("Guess a letter:\n").title() 
-    allguesses.append(letter)
-   
-    if letter in word:
-        print("Well done!")
-    else:
-        attempts -= 1
-        print(f"Wrong. You have {attempts} number of attempts left.")
+def roll_shape():
+    if roll_die() == 1:
+        return "*"
+    elif roll_die() == 2:
+        return "**"
+    elif roll_die() == 3:
+        return "**\n*"
+    elif roll_die() == 4:
+        return "**\n**"
+    elif roll_die() == 5:
+        return "**\n*\n**"
+    elif roll_die() == 6:
+        return "**\n**\n**"
         
-    print(f"\nletters used so far: {allguesses}")
-    
-    wrongletters = 0
-    for guess in word:
-        if guess in allguesses:
-            print(f"{guess}", end="")
+
+def guess_sum(player, player_guesses):
+    remaining_guesses = player_guesses[player]
+    while remaining_guesses > 0:
+        print(f"{player}, you have {remaining_guesses} guesses remaining.")
+        guess = int(input(f"{player}, enter your guess for the sum of three dice: "))
+        if 3 <= guess <= 18:
+            return guess
         else:
-            print("line", end="")
-            wrongletters += 1
-       
-            if wrongletters==0:
-                print(f"Congratulations! You've guessed the word. You took {number_of_guesses.count(allguesses)} number of guesses.")
-            break  
- 
-          
-if attempts==0:
-    print("You have lost.")
+            print("Invalid guess! Please enter a number between 3 and 18.")
+        remaining_guesses -= 1
+    return None
+
+def main():
+    
+    players = ["player 1", "player 2", "player 3", "player 4", "player 5", "player 6"]
+    player_guesses = {player: 5 for player in players}
+    
+    while True:
+        
+        actual = sum(roll_three_dice())
+        
+        for player in players:
+            guess = guess_sum(player, player_guesses)
+            if guess == actual:
+                print(f"{player} guessed it correctly with a guess of {guess}.")
+                break
+            else:
+                print(f"{player} guessed wrong!")
+                player_guesses[player] -= 1
+        else:
+            print(f"The actual sum of three dice is: {actual}")
+            print(f"Number of guesses left for each player: {player_guesses}")
+            continue
+        
+        break
+    
+    print(f"The actual sum of three dice is: {actual}")
+    print(f"Number of guesses left for each player: {player_guesses}")
+        
+    if sum(1 for guesses in player_guesses.values() if guesses > 0) <= 1:
+        print("\nGame over! Only one player is left with guesses. They are the winner.")
+    elif all(guesses == 0 for guesses in player_guesses.values()):
+        print("\nGame over! No player is left with guesses. There is no winner.")
+        
+if __name__ == "__main__":
+    main()
